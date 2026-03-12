@@ -2,6 +2,8 @@
 
 import MobileNav from './MobileNav';
 import Image from 'next/image';
+import { Show, UserButton, SignInButton } from '@clerk/nextjs';
+import { LogIn } from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -32,14 +34,29 @@ export default function Navbar() {
         {/* Future: quick actions, search, etc. */}
       </div>
 
-      {/* Right – User avatar placeholder (Clerk auth later) */}
+      {/* Right – Clerk Auth */}
       <div className="flex items-center gap-3">
-        <div
-          className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center overflow-hidden"
-          style={{ backgroundColor: '#1a1a2e' }}
-        >
-          {/* Clerk UserButton will replace this */}
-        </div>
+        <Show when="signed-in">
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: 'w-9 h-9',
+              },
+            }}
+          />
+        </Show>
+        <Show when="signed-out">
+          <SignInButton mode="modal">
+            <button
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white transition-all duration-200 hover:opacity-90"
+              style={{ backgroundColor: '#4f46e5' }}
+            >
+              <LogIn className="w-4 h-4" />
+              Sign In
+            </button>
+          </SignInButton>
+        </Show>
       </div>
     </header>
   );
