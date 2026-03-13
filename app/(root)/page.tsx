@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { actionCards } from '@/constants';
-import ActionCard from '@/components/ActionCard';
+import ActionCardList from '@/components/ActionCardList';
 
 const container = {
   hidden: { opacity: 0 },
@@ -95,20 +94,8 @@ export default function Home() {
       </motion.div>
 
       {/* Action Cards */}
-      <motion.div
-        variants={container}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
-      >
-        {actionCards.map((card) => (
-          <ActionCard
-            key={card.title}
-            title={card.title}
-            description={card.description}
-            icon={card.icon}
-            variants={item}
-          />
-        ))}
-      </motion.div>
+      <ActionCardList containerVariants={container} itemVariants={item} />
     </motion.div>
   );
 }
+

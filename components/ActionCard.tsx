@@ -1,26 +1,21 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
-
-interface ActionCardProps {
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  variants?: any;
-}
+import type { ActionCardProps } from '@/types';
 
 export default function ActionCard({
   title,
   description,
   icon: Icon,
   variants,
+  onClick,
 }: ActionCardProps) {
   return (
     <motion.button
       variants={variants}
       whileHover={{ scale: 1.03, y: -3 }}
       whileTap={{ scale: 0.97 }}
+      onClick={onClick}
       className="glass-card relative overflow-hidden rounded-2xl p-5 text-left cursor-pointer group min-h-35 sm:min-h-37.5 flex flex-col justify-between outline-none"
     >
       {/* Icon */}
