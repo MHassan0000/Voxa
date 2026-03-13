@@ -26,7 +26,7 @@ export default function MobileNav() {
             onClick={() => setOpen(false)}
           />
           <motion.div
-            className="fixed top-0 left-0 z-50 h-[100dvh] w-65 lg:hidden overflow-hidden"
+            className="fixed top-0 left-0 z-50 h-dvh w-65 lg:hidden overflow-hidden"
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}

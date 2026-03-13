@@ -16,7 +16,7 @@ export default function Navbar() {
         <MobileNav />
         <div className="flex lg:hidden items-center gap-3">
           <Image
-            src="/images/VOXA.png"
+            src="/images/voxa-logo-new.png"
             alt="Voxa"
             width={32}
             height={32}

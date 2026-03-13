@@ -4,21 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import {
-  Home,
-  CalendarClock,
-  History,
-  Video,
-  Plus,
-} from 'lucide-react';
-
-const sidebarLinks = [
-  { label: 'Home', href: '/', icon: Home },
-  { label: 'Upcoming', href: '/upcoming', icon: CalendarClock },
-  { label: 'Previous', href: '/previous', icon: History },
-  { label: 'Recordings', href: '/recordings', icon: Video },
-  { label: 'Personal Room', href: '/personal-room', icon: Plus },
-];
+import { sidebarLinks } from '@/constants';
 
 interface SidebarProps {
   className?: string;
@@ -49,7 +35,7 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
       {/* Logo */}
       <div className="flex items-center gap-3 px-6 py-7">
         <Image
-          src="/images/VOXA.png"
+          src="/images/voxa-logo-new.png"
           alt="Voxa"
           width={40}
           height={40}
@@ -122,7 +108,7 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
       <div className="px-6 py-5 border-t border-white/4 mt-auto">
         <div className="flex items-center gap-2">
           <Image
-            src="/images/VOXA.png"
+            src="/images/voxa-logo-new.png"
             alt="Voxa"
             width={20}
             height={20}

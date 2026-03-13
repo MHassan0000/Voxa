@@ -23,7 +23,7 @@ export default function AuthLayout({
       {/* Logo */}
       <div className="relative z-10 mb-8 flex items-center gap-3">
         <Image
-          src="/images/VOXA.png"
+          src="/images/voxa-logo-new.png"
           alt="Voxa"
           width={40}
           height={40}

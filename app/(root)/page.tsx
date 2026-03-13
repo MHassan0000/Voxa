@@ -2,30 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Users, CalendarDays, Video } from 'lucide-react';
-
-const actionCards = [
-  {
-    title: 'New Meeting',
-    description: 'Start an instant meeting',
-    icon: Plus,
-  },
-  {
-    title: 'Join Meeting',
-    description: 'Via invitation link',
-    icon: Users,
-  },
-  {
-    title: 'Schedule Meeting',
-    description: 'Plan your meeting',
-    icon: CalendarDays,
-  },
-  {
-    title: 'View Recordings',
-    description: 'Meeting recordings',
-    icon: Video,
-  },
-];
+import { actionCards } from '@/constants';
+import ActionCard from '@/components/ActionCard';
 
 const container = {
   hidden: { opacity: 0 },
@@ -121,39 +99,15 @@ export default function Home() {
         variants={container}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
       >
-        {actionCards.map((card) => {
-          const Icon = card.icon;
-          return (
-            <motion.button
-              key={card.title}
-              variants={item}
-              whileHover={{ scale: 1.03, y: -3 }}
-              whileTap={{ scale: 0.97 }}
-              className="glass-card relative overflow-hidden rounded-2xl p-5 text-left cursor-pointer group min-h-35 sm:min-h-37.5 flex flex-col justify-between outline-none"
-            >
-              {/* Icon */}
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:border-white/14"
-                style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                }}
-              >
-                <Icon className="w-4.5 h-4.5 text-zinc-300 group-hover:text-white transition-colors" />
-              </div>
-
-              {/* Text */}
-              <div className="mt-auto">
-                <h3 className="text-sm font-medium text-zinc-100">
-                  {card.title}
-                </h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
-                  {card.description}
-                </p>
-              </div>
-            </motion.button>
-          );
-        })}
+        {actionCards.map((card) => (
+          <ActionCard
+            key={card.title}
+            title={card.title}
+            description={card.description}
+            icon={card.icon}
+            variants={item}
+          />
+        ))}
       </motion.div>
     </motion.div>
   );
