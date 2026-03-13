@@ -1,14 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useStreamVideoClient } from '@stream-io/video-react-sdk';
+import { useUser } from '@clerk/nextjs';
+import { toast } from 'sonner';
+
 import { actionCards } from '@/constants';
 import ActionCard from '@/components/ActionCard';
 import MeetingModal from '@/components/MeetingModal';
 import type { ActionCardData } from '@/types';
 import type { Variants } from 'framer-motion';
-import { useStreamVideoClient } from '@stream-io/video-react-sdk';
-import { useUser } from '@clerk/nextjs';
+
 interface ActionCardListProps {
   containerVariants: Variants;
   itemVariants: Variants;
@@ -21,6 +25,72 @@ export default function ActionCardList({
   const [selectedCard, setSelectedCard] = useState<ActionCardData | null>(null);
   const { user } = useUser();
   const client = useStreamVideoClient();
+  const router = useRouter();
+
+  const handleAction = async () => {
+    // If not signed in, redirect to sign in to use meeting features
+    if (!user) {
+      router.push('/sign-in');
+      return;
+    }
+
+    // If signed in but Stream client isn't ready, just return
+    if (!client || !selectedCard) return;
+
+    switch (selectedCard.id) {
+      case 'new-meeting': {
+        try {
+          const id = crypto.randomUUID();
+          const call = client.call('default', id);
+          if (!call) throw new Error('Failed to create meeting');
+
+          await call.getOrCreate({
+            data: {
+              starts_at: new Date().toISOString(),
+              custom: {
+                description: 'Instant Meeting',
+              },
+            },
+          });
+
+          toast.success('Meeting Created', {
+            description: 'Redirecting you to your meeting room…',
+          });
+
+          router.push(`/meeting/${call.id}`);
+        } catch (error) {
+          console.error(error);
+          toast.error('Failed to create Meeting', {
+            description: 'Something went wrong. Please try again.',
+          });
+        }
+        break;
+      }
+
+      case 'join-meeting': {
+        toast.info('Join Meeting', {
+          description: 'Enter a meeting link to join.',
+        });
+        break;
+      }
+
+      case 'schedule-meeting': {
+        toast.info('Schedule Meeting', {
+          description: 'Meeting scheduling coming soon.',
+        });
+        break;
+      }
+
+      case 'view-recordings': {
+        router.push('/recordings');
+        break;
+      }
+
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       <motion.div
@@ -49,6 +119,7 @@ export default function ActionCardList({
         description={selectedCard?.modalDescription ?? ''}
         buttonText={selectedCard?.buttonText ?? ''}
         icon={selectedCard?.icon ?? actionCards[0].icon}
+        onAction={handleAction}
       />
     </>
   );

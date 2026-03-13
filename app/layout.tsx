@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const sora = Sora({
@@ -139,6 +140,7 @@ export default function RootLayout({
           }}
         >
           {children}
+          <Toaster position="bottom-right" />
         </ClerkProvider>
       </body>
     </html>
