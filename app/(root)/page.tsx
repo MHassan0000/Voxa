@@ -9,25 +9,21 @@ const actionCards = [
     title: 'New Meeting',
     description: 'Start an instant meeting',
     icon: Plus,
-    gradient: 'linear-gradient(135deg, #f97316, #ea580c)',
   },
   {
     title: 'Join Meeting',
     description: 'Via invitation link',
     icon: Users,
-    gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)',
   },
   {
     title: 'Schedule Meeting',
     description: 'Plan your meeting',
     icon: CalendarDays,
-    gradient: 'linear-gradient(135deg, #a855f7, #7c3aed)',
   },
   {
     title: 'View Recordings',
     description: 'Meeting recordings',
     icon: Video,
-    gradient: 'linear-gradient(135deg, #f59e0b, #eab308)',
   },
 ];
 
@@ -44,7 +40,7 @@ const item = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { type: 'spring', stiffness: 260, damping: 20 },
+    transition: { type: 'spring' as const, stiffness: 260, damping: 20 },
   },
 };
 
@@ -79,30 +75,30 @@ export default function Home() {
       variants={container}
       initial="hidden"
       animate="show"
-      className="max-w-[1100px] mx-auto space-y-8"
+      className="w-full max-w-275 mx-auto space-y-6"
     >
       {/* Hero / Clock Banner */}
       <motion.div
         variants={item}
-        className="relative overflow-hidden rounded-2xl p-8 sm:p-10 lg:p-12 min-h-[240px] flex flex-col justify-end"
+        className="relative overflow-hidden rounded-2xl p-6 sm:p-8 lg:p-12 min-h-50 sm:min-h-55 flex flex-col justify-end"
         style={{
-          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)',
+          backgroundImage: 'url(/images/hero-background.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
         }}
       >
-        {/* Decorative ambient glows */}
+        {/* Dark overlay for readability */}
         <div
-          className="absolute top-[-40%] right-[-10%] w-[400px] h-[400px] rounded-full blur-[120px] pointer-events-none"
-          style={{ background: 'rgba(79, 70, 229, 0.15)' }}
-        />
-        <div
-          className="absolute bottom-[-30%] left-[30%] w-[300px] h-[300px] rounded-full blur-[100px] pointer-events-none"
-          style={{ background: 'rgba(139, 92, 246, 0.1)' }}
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(160deg, rgba(5,5,7,0.7) 0%, rgba(5,5,7,0.4) 50%, rgba(5,5,7,0.6) 100%)',
+          }}
         />
 
-        {/* Time display */}
         <div className="relative z-10">
           <motion.h1
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight"
+            className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-white tracking-tight"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
@@ -110,7 +106,7 @@ export default function Home() {
             {formattedTime}
           </motion.h1>
           <motion.p
-            className="mt-2 text-base sm:text-lg text-zinc-400 font-medium"
+            className="mt-2 text-sm sm:text-base text-zinc-300 font-normal"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
@@ -123,7 +119,7 @@ export default function Home() {
       {/* Action Cards */}
       <motion.div
         variants={container}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
       >
         {actionCards.map((card) => {
           const Icon = card.icon;
@@ -131,28 +127,30 @@ export default function Home() {
             <motion.button
               key={card.title}
               variants={item}
-              whileHover={{ scale: 1.04, y: -4 }}
-              whileTap={{ scale: 0.96 }}
-              className="relative overflow-hidden rounded-2xl p-6 text-left cursor-pointer group min-h-[170px] flex flex-col justify-between border-0 outline-none"
-              style={{ background: card.gradient }}
+              whileHover={{ scale: 1.03, y: -3 }}
+              whileTap={{ scale: 0.97 }}
+              className="glass-card relative overflow-hidden rounded-2xl p-5 text-left cursor-pointer group min-h-35 sm:min-h-37.5 flex flex-col justify-between outline-none"
             >
-              {/* Icon container */}
-              <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
-                <Icon className="w-5 h-5 text-white" />
+              {/* Icon */}
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:border-white/14"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <Icon className="w-4.5 h-4.5 text-zinc-300 group-hover:text-white transition-colors" />
               </div>
 
               {/* Text */}
               <div className="mt-auto">
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-sm font-medium text-zinc-100">
                   {card.title}
                 </h3>
-                <p className="text-sm text-white/70 mt-0.5">
+                <p className="text-xs text-zinc-400 mt-0.5">
                   {card.description}
                 </p>
               </div>
-
-              {/* Hover shimmer */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-white/10 to-transparent" />
             </motion.button>
           );
         })}

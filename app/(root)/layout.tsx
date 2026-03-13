@@ -7,19 +7,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: '#0d0d12' }}>
-      {/* Desktop sidebar */}
+    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: '#050507' }}>
+      {/* Desktop sidebar — fixed width, never collapses */}
       <div
-        className="hidden lg:flex lg:w-[260px] lg:flex-shrink-0 border-r border-white/[0.06]"
-        style={{ backgroundColor: '#131320' }}
+        className="hidden lg:flex lg:flex-col shrink-0 border-r border-white/4"
+        style={{ backgroundColor: '#0a0a0f', width: '240px' }}
       >
         <Sidebar className="w-full" />
       </div>
 
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col overflow-hidden" style={{ backgroundColor: '#0d0d12' }}>
+      {/* Main content area — fills remaining space */}
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0" style={{ backgroundColor: '#050507' }}>
         <Navbar />
-        <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-5 lg:px-8 py-5">
           {children}
         </main>
       </div>

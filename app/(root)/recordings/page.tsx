@@ -9,21 +9,21 @@ export default function RecordingsPage() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="max-w-[1100px] mx-auto"
+      className="w-full max-w-275 mx-auto"
     >
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#1a1a2e' }}>
-          <Video className="w-5 h-5" style={{ color: '#6366f1' }} />
+      <div className="flex items-center gap-3 mb-6">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center"
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)' }}
+        >
+          <Video className="w-4 h-4 text-zinc-300" />
         </div>
-        <h1 className="text-2xl font-semibold text-white">Recordings</h1>
+        <h1 className="text-lg font-medium text-zinc-100">Recordings</h1>
       </div>
 
-      <div
-        className="rounded-2xl border border-white/[0.07] p-16 flex flex-col items-center justify-center text-center min-h-[350px]"
-        style={{ backgroundColor: '#1a1a2e' }}
-      >
-        <Video className="w-14 h-14 text-zinc-600 mb-4" />
-        <p className="text-zinc-500 text-sm">No recordings yet</p>
+      <div className="glass-card rounded-2xl p-14 flex flex-col items-center justify-center text-center min-h-75">
+        <Video className="w-10 h-10 text-zinc-500 mb-3" />
+        <p className="text-zinc-400 text-xs">No recordings yet</p>
       </div>
     </motion.div>
   );

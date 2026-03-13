@@ -44,28 +44,29 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
   return (
     <aside
       className={`flex flex-col h-full ${className}`}
-      style={{ backgroundColor: '#131320' }}
+      style={{ backgroundColor: '#0a0a0f' }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-6 py-7">
         <Image
-          src="/images/voxalogo.png"
+          src="/images/VOXA.png"
           alt="Voxa"
-          width={36}
-          height={36}
-          className="rounded-lg"
+          width={40}
+          height={40}
+          className="w-10 h-10 rounded-lg object-contain shrink-0"
+          priority
         />
-        <span className="text-xl font-bold tracking-tight text-white">
-          VOXA
+        <span className="text-xl font-bold tracking-wide text-zinc-100">
+          Voxa
         </span>
       </div>
 
       {/* Divider */}
-      <div className="mx-4 h-px bg-white/[0.06]" />
+      <div className="mx-5 h-px bg-white/4" />
 
       {/* Navigation */}
       <motion.nav
-        className="flex-1 flex flex-col gap-1 px-3 mt-5"
+        className="flex-1 flex flex-col gap-0.5 px-3 mt-5 overflow-y-auto"
         variants={sidebarVariants}
         initial="hidden"
         animate="show"
@@ -84,30 +85,31 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
                 className="relative block"
               >
                 <motion.div
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors relative
-                    ${
-                      isActive
-                        ? 'text-white'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 relative
+                    ${isActive
+                      ? 'text-white'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/3'
                     }`}
                   whileHover={{ x: 3 }}
                   whileTap={{ scale: 0.97 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  transition={{ type: 'spring' as const, stiffness: 400, damping: 25 }}
                 >
-                  {/* Active background pill */}
                   {isActive && (
                     <motion.div
                       className="absolute inset-0 rounded-xl"
-                      style={{ backgroundColor: '#4f46e5' }}
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(108, 99, 255, 0.15) 0%, rgba(108, 99, 255, 0.08) 100%)',
+                        border: '1px solid rgba(108, 99, 255, 0.15)',
+                      }}
                       layoutId="sidebar-active"
                       transition={{
-                        type: 'spring',
+                        type: 'spring' as const,
                         stiffness: 350,
                         damping: 30,
                       }}
                     />
                   )}
-                  <Icon className="w-5 h-5 relative z-10 flex-shrink-0" />
+                  <Icon className="w-5 h-5 relative z-10 shrink-0" />
                   <span className="relative z-10">{link.label}</span>
                 </motion.div>
               </Link>
@@ -117,10 +119,19 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
       </motion.nav>
 
       {/* Bottom branding */}
-      <div className="px-6 py-5 border-t border-white/[0.06]">
-        <p className="text-xs text-zinc-500">
-          © 2026 Voxa
-        </p>
+      <div className="px-6 py-5 border-t border-white/4 mt-auto">
+        <div className="flex items-center gap-2">
+          <Image
+            src="/images/VOXA.png"
+            alt="Voxa"
+            width={20}
+            height={20}
+            className="w-5 h-5 rounded opacity-70 object-contain shrink-0"
+          />
+          <p className="text-xs font-medium text-zinc-400">
+            Voxa
+          </p>
+        </div>
       </div>
     </aside>
   );

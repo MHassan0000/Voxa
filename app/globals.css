@@ -4,84 +4,84 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ── Voxa Design System ── */
+/* ── Voxa Dark Ambient Theme ── */
 :root {
-  --voxa-bg: #0d0d12;
-  --voxa-sidebar: #131320;
-  --voxa-card: #1a1a2e;
-  --voxa-card-hover: #22223a;
-  --voxa-accent: #4f46e5;
-  --voxa-accent-light: #6366f1;
+  --voxa-bg: #050507;
+  --voxa-surface: #0a0a0f;
+  --voxa-card: #0e0e14;
+  --voxa-card-hover: #141420;
+  --voxa-accent: #6c63ff;
+  --voxa-accent-subtle: rgba(108, 99, 255, 0.12);
   --voxa-text: #e4e4e7;
-  --voxa-muted: #6b7280;
-  --voxa-border: rgba(255, 255, 255, 0.07);
+  --voxa-muted: #9ca3af;
+  --voxa-border: rgba(255, 255, 255, 0.06);
+  --voxa-glow: rgba(108, 99, 255, 0.06);
 
-  --background: #0d0d12;
+  --background: #050507;
   --foreground: #e4e4e7;
-  --card: #1a1a2e;
+  --card: #0e0e14;
   --card-foreground: #e4e4e7;
-  --popover: #1a1a2e;
+  --popover: #0e0e14;
   --popover-foreground: #e4e4e7;
-  --primary: #4f46e5;
+  --primary: #6c63ff;
   --primary-foreground: #ffffff;
-  --secondary: #1e1e30;
+  --secondary: #0e0e14;
   --secondary-foreground: #e4e4e7;
-  --muted: #1e1e30;
-  --muted-foreground: #6b7280;
-  --accent: #1e1e30;
+  --muted: #0e0e14;
+  --muted-foreground: #9ca3af;
+  --accent: #0e0e14;
   --accent-foreground: #e4e4e7;
   --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.07);
-  --input: rgba(255, 255, 255, 0.1);
-  --ring: #4f46e5;
+  --border: rgba(255, 255, 255, 0.06);
+  --input: rgba(255, 255, 255, 0.06);
+  --ring: #6c63ff;
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
-  --radius: 0.625rem;
-  --sidebar: #131320;
+  --radius: 0.75rem;
+  --sidebar: #0a0a0f;
   --sidebar-foreground: #e4e4e7;
-  --sidebar-primary: #4f46e5;
+  --sidebar-primary: #6c63ff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e1e30;
+  --sidebar-accent: rgba(108, 99, 255, 0.12);
   --sidebar-accent-foreground: #e4e4e7;
-  --sidebar-border: rgba(255, 255, 255, 0.07);
-  --sidebar-ring: #4f46e5;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: #6c63ff;
 }
 
-/* Dark class overrides (same as root since we're dark-first) */
 .dark {
-  --background: #0d0d12;
+  --background: #050507;
   --foreground: #e4e4e7;
-  --card: #1a1a2e;
+  --card: #0e0e14;
   --card-foreground: #e4e4e7;
-  --popover: #1a1a2e;
+  --popover: #0e0e14;
   --popover-foreground: #e4e4e7;
-  --primary: #4f46e5;
+  --primary: #6c63ff;
   --primary-foreground: #ffffff;
-  --secondary: #1e1e30;
+  --secondary: #0e0e14;
   --secondary-foreground: #e4e4e7;
-  --muted: #1e1e30;
-  --muted-foreground: #6b7280;
-  --accent: #1e1e30;
+  --muted: #0e0e14;
+  --muted-foreground: #9ca3af;
+  --accent: #0e0e14;
   --accent-foreground: #e4e4e7;
   --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.07);
-  --input: rgba(255, 255, 255, 0.1);
-  --ring: #4f46e5;
-  --sidebar: #131320;
+  --border: rgba(255, 255, 255, 0.06);
+  --input: rgba(255, 255, 255, 0.06);
+  --ring: #6c63ff;
+  --sidebar: #0a0a0f;
   --sidebar-foreground: #e4e4e7;
-  --sidebar-primary: #4f46e5;
+  --sidebar-primary: #6c63ff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e1e30;
+  --sidebar-accent: rgba(108, 99, 255, 0.12);
   --sidebar-accent-foreground: #e4e4e7;
-  --sidebar-border: rgba(255, 255, 255, 0.07);
-  --sidebar-ring: #4f46e5;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: #6c63ff;
 }
 
 @theme inline {
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-sora);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -125,36 +125,59 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    box-sizing: border-box;
   }
   html {
-    @apply font-sans;
     color-scheme: dark;
   }
   body {
-    background-color: #0d0d12;
+    background-color: #050507;
     color: #e4e4e7;
     margin: 0;
     padding: 0;
+    font-family: var(--font-sora), 'Sora', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* ── Custom scrollbar ── */
+/* ── Scrollbar ── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 /* ── Selection ── */
 ::selection {
-  background-color: rgba(79, 70, 229, 0.3);
+  background-color: rgba(108, 99, 255, 0.25);
   color: #ffffff;
+}
+
+/* ── Glass card utility ── */
+.glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(14, 14, 20, 0.8) 0%,
+    rgba(14, 14, 20, 0.4) 100%
+  );
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-card:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 20, 32, 0.9) 0%,
+    rgba(20, 20, 32, 0.5) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.1);
 }
