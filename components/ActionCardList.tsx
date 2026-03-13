@@ -7,7 +7,8 @@ import ActionCard from '@/components/ActionCard';
 import MeetingModal from '@/components/MeetingModal';
 import type { ActionCardData } from '@/types';
 import type { Variants } from 'framer-motion';
-
+import { useStreamVideoClient } from '@stream-io/video-react-sdk';
+import { useUser } from '@clerk/nextjs';
 interface ActionCardListProps {
   containerVariants: Variants;
   itemVariants: Variants;
@@ -18,7 +19,8 @@ export default function ActionCardList({
   itemVariants,
 }: ActionCardListProps) {
   const [selectedCard, setSelectedCard] = useState<ActionCardData | null>(null);
-
+  const { user } = useUser();
+  const client = useStreamVideoClient();
   return (
     <>
       <motion.div
