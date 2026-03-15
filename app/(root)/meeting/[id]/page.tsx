@@ -13,7 +13,7 @@ import Alert from '@/components/Alert'
 const MeetingPage = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params);
     const { user, isLoaded } = useUser();
-    const [isSetupComplete, setisSetupComplete] = useState<Boolean>(false);
+    const [isSetupComplete, setIsSetupComplete] = useState(false);
     const { call, isCallLoading } = useGetCallById(id);
 
 
@@ -35,7 +35,7 @@ const MeetingPage = ({ params }: { params: Promise<{ id: string }> }) => {
         <main className='h-screen w-full'>
             <StreamCall call={call}>
                 <StreamTheme>
-                    {!isSetupComplete ? (<MeetingSetup setIsSetupComplete={setisSetupComplete} />) :
+                    {!isSetupComplete ? (<MeetingSetup setIsSetupComplete={setIsSetupComplete} />) :
                         (<MeetingRoom />)}
 
 

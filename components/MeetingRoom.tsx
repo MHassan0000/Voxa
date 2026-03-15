@@ -16,7 +16,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import Loader from './Loader';
@@ -52,15 +51,15 @@ const MeetingRoom = () => {
     return (
         <section className="h-screen w-full flex flex-col overflow-hidden text-zinc-100 bg-[#050507]">
             {/* Top Area: Video Grid */}
-            <div className="flex-1 w-full relative min-h-0 bg-black/40 p-2 sm:p-4 flex">
-                <div className="w-full h-full flex-1">
+            <div className="flex-1 w-full relative min-h-0 bg-black/40 p-2 sm:p-4 flex overflow-hidden">
+                <div className="w-full h-full flex-1 overflow-hidden">
                     <CallLayout />
                 </div>
 
                 {/* Right Sidebar: Participants List */}
                 <div
                     className={cn('h-full hidden border-l border-white/10 bg-[#0a0a0f] transition-all duration-300', {
-                        'show-block': showParticipants,
+                        'block! w-70': showParticipants,
                     })}
                 >
                     <CallParticipantsList onClose={() => setShowParticipants(false)} />
