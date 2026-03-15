@@ -3,12 +3,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { sidebarLinks } from '@/constants';
 
 interface SidebarProps {
   className?: string;
   onLinkClick?: () => void;
+  collapsed?: boolean;
+  onToggle?: () => void;
 }
 
 const sidebarVariants = {
@@ -24,7 +27,12 @@ const linkVariant = {
   show: { opacity: 1, x: 0 },
 };
 
-export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
+export default function Sidebar({
+  className = '',
+  onLinkClick,
+  collapsed = false,
+  onToggle,
+}: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -33,7 +41,7 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
       style={{ backgroundColor: '#0a0a0f' }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-7">
+      <div className={`flex items-center gap-3 py-7 ${collapsed ? 'justify-center px-3' : 'px-6'}`}>
         <Image
           src="/images/voxa-logo-new.png"
           alt="Voxa"
@@ -42,17 +50,27 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
           className="w-10 h-10 rounded-lg object-contain shrink-0"
           priority
         />
-        <span className="text-xl font-bold tracking-wide text-zinc-100">
-          Voxa
-        </span>
+        <AnimatePresence>
+          {!collapsed && (
+            <motion.span
+              className="text-xl font-bold tracking-wide text-zinc-100 overflow-hidden whitespace-nowrap"
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: 'auto' }}
+              exit={{ opacity: 0, width: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              Voxa
+            </motion.span>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Divider */}
-      <div className="mx-5 h-px bg-white/4" />
+      <div className={`h-px bg-white/4 ${collapsed ? 'mx-3' : 'mx-5'}`} />
 
       {/* Navigation */}
       <motion.nav
-        className="flex-1 flex flex-col gap-0.5 px-3 mt-5 overflow-y-auto"
+        className={`flex-1 flex flex-col gap-0.5 mt-5 overflow-y-auto ${collapsed ? 'px-2' : 'px-3'}`}
         variants={sidebarVariants}
         initial="hidden"
         animate="show"
@@ -69,14 +87,15 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
                 href={link.href}
                 onClick={onLinkClick}
                 className="relative block"
+                title={collapsed ? link.label : undefined}
               >
                 <motion.div
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 relative
+                  className={`flex items-center ${collapsed ? 'justify-center' : ''} gap-3 ${collapsed ? 'px-3' : 'px-4'} py-3 rounded-xl text-sm font-medium transition-all duration-200 relative
                     ${isActive
                       ? 'text-white'
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/3'
                     }`}
-                  whileHover={{ x: 3 }}
+                  whileHover={{ x: collapsed ? 0 : 3 }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ type: 'spring' as const, stiffness: 400, damping: 25 }}
                 >
@@ -96,7 +115,19 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
                     />
                   )}
                   <Icon className="w-5 h-5 relative z-10 shrink-0" />
-                  <span className="relative z-10">{link.label}</span>
+                  <AnimatePresence>
+                    {!collapsed && (
+                      <motion.span
+                        className="relative z-10 overflow-hidden whitespace-nowrap"
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: 'auto' }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {link.label}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               </Link>
             </motion.div>
@@ -104,21 +135,51 @@ export default function Sidebar({ className = '', onLinkClick }: SidebarProps) {
         })}
       </motion.nav>
 
-      {/* Bottom branding */}
-      <div className="px-6 py-5 border-t border-white/4 mt-auto">
-        <div className="flex items-center gap-2">
-          <Image
-            src="/images/voxa-logo-new.png"
-            alt="Voxa"
-            width={20}
-            height={20}
-            className="w-5 h-5 rounded opacity-70 object-contain shrink-0"
-          />
-          <p className="text-xs font-medium text-zinc-400">
-            Voxa
-          </p>
+      {/* Toggle Button */}
+      {onToggle && (
+        <div className={`px-3 py-3 border-t border-white/4`}>
+          <button
+            onClick={onToggle}
+            className="flex items-center justify-center w-full py-2.5 rounded-xl text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-all cursor-pointer"
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="w-5 h-5" />
+            ) : (
+              <div className="flex items-center gap-2 text-sm">
+                <PanelLeftClose className="w-4.5 h-4.5" />
+                <span>Collapse</span>
+              </div>
+            )}
+          </button>
         </div>
-      </div>
+      )}
+
+      {/* Bottom branding (only when expanded) */}
+      <AnimatePresence>
+        {!collapsed && (
+          <motion.div
+            className="px-6 py-5 border-t border-white/4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+          >
+            <div className="flex items-center gap-2">
+              <Image
+                src="/images/voxa-logo-new.png"
+                alt="Voxa"
+                width={20}
+                height={20}
+                className="w-5 h-5 rounded opacity-70 object-contain shrink-0"
+              />
+              <p className="text-xs font-medium text-zinc-400">
+                Voxa
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </aside>
   );
 }

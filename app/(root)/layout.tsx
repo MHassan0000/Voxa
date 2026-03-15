@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
 import StreamVideoProvider from '@/providers/streamclientprovider';
@@ -7,15 +10,24 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
   return (
     <StreamVideoProvider>
       <div className="flex h-screen overflow-hidden" style={{ backgroundColor: '#050507' }}>
-        {/* Desktop sidebar — fixed width, never collapses */}
+        {/* Desktop sidebar — collapsible */}
         <div
-          className="hidden lg:flex lg:flex-col shrink-0 border-r border-white/4"
-          style={{ backgroundColor: '#0a0a0f', width: '240px' }}
+          className="hidden lg:flex lg:flex-col shrink-0 border-r border-white/4 transition-all duration-300 ease-in-out"
+          style={{
+            backgroundColor: '#0a0a0f',
+            width: sidebarCollapsed ? '72px' : '240px',
+          }}
         >
-          <Sidebar className="w-full" />
+          <Sidebar
+            className="w-full"
+            collapsed={sidebarCollapsed}
+            onToggle={() => setSidebarCollapsed((prev) => !prev)}
+          />
         </div>
 
         {/* Main content area — fills remaining space */}
