@@ -35,8 +35,12 @@ export interface MeetingModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
-  description: string;
+  description?: string;
   buttonText: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  image?: string;
+  buttonIcon?: string;
+  className?: string;
   onAction?: () => void;
+  children?: React.ReactNode;
 }

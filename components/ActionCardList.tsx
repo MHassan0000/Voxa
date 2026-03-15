@@ -3,91 +3,114 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { useStreamVideoClient } from '@stream-io/video-react-sdk';
+import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
 import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
+import ReactDatePicker from 'react-datepicker';
 
 import { actionCards } from '@/constants';
 import ActionCard from '@/components/ActionCard';
 import MeetingModal from '@/components/MeetingModal';
-import type { ActionCardData } from '@/types';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import type { Variants } from 'framer-motion';
-import ReactDatepicker from 'react-datepicker';
+
+import 'react-datepicker/dist/react-datepicker.css';
+
+type MeetingState =
+  | 'isInstantMeeting'
+  | 'isScheduleMeeting'
+  | 'isJoiningMeeting'
+  | undefined;
 
 interface ActionCardListProps {
   containerVariants: Variants;
   itemVariants: Variants;
 }
 
+const initialValues = {
+  dateTime: new Date(),
+  description: '',
+  link: '',
+};
+
 export default function ActionCardList({
   containerVariants,
   itemVariants,
 }: ActionCardListProps) {
-  const [selectedCard, setSelectedCard] = useState<ActionCardData | null>(null);
+  const [meetingState, setMeetingState] = useState<MeetingState>(undefined);
+  const [values, setValues] = useState(initialValues);
+  const [callDetail, setCallDetail] = useState<Call>();
+
   const { user } = useUser();
   const client = useStreamVideoClient();
   const router = useRouter();
 
-  const handleAction = async () => {
-    // If not signed in, redirect to sign in to use meeting features
+  const createMeeting = async () => {
     if (!user) {
       router.push('/sign-in');
       return;
     }
+    if (!client) return;
 
-    // If signed in but Stream client isn't ready, just return
-    if (!client || !selectedCard) return;
-
-    switch (selectedCard.id) {
-      case 'new-meeting': {
-        try {
-          const id = crypto.randomUUID();
-          const call = client.call('default', id);
-          if (!call) throw new Error('Failed to create meeting');
-
-          await call.getOrCreate({
-            data: {
-              starts_at: new Date().toISOString(),
-              custom: {
-                description: 'Instant Meeting',
-              },
-            },
-          });
-
-          toast.success('Meeting Created', {
-            description: 'Redirecting you to your meeting room…',
-          });
-
-          router.push(`/meeting/${call.id}`);
-        } catch (error) {
-          console.error(error);
-          toast.error('Failed to create Meeting', {
-            description: 'Something went wrong. Please try again.',
-          });
-        }
-        break;
+    try {
+      if (!values.dateTime) {
+        toast.warning('Please select a date and time');
+        return;
       }
 
-      case 'join-meeting': {
-        toast.info('Join Meeting', {
-          description: 'Enter a meeting link to join.',
-        });
-        break;
+      const id = crypto.randomUUID();
+      const call = client.call('default', id);
+      if (!call) throw new Error('Failed to create meeting');
+
+      const startsAt =
+        values.dateTime.toISOString() || new Date(Date.now()).toISOString();
+      const description = values.description || 'Instant Meeting';
+
+      await call.getOrCreate({
+        data: {
+          starts_at: startsAt,
+          custom: {
+            description,
+          },
+        },
+      });
+
+      setCallDetail(call);
+
+      // If no description was provided (instant meeting), redirect immediately
+      if (!values.description) {
+        router.push(`/meeting/${call.id}`);
       }
 
-      case 'schedule-meeting': {
-        toast.info('Schedule Meeting', {
-          description: 'Meeting scheduling coming soon.',
-        });
-        break;
-      }
+      toast.success('Meeting Created', {
+        description: values.description
+          ? 'Your meeting has been scheduled. Copy the link to share.'
+          : 'Redirecting you to your meeting room…',
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to create Meeting', {
+        description: 'Something went wrong. Please try again.',
+      });
+    }
+  };
 
-      case 'view-recordings': {
+  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL || window.location.origin}/meeting/${callDetail?.id}`;
+
+  const handleCardClick = (cardId: string) => {
+    switch (cardId) {
+      case 'new-meeting':
+        setMeetingState('isInstantMeeting');
+        break;
+      case 'join-meeting':
+        setMeetingState('isJoiningMeeting');
+        break;
+      case 'schedule-meeting':
+        setMeetingState('isScheduleMeeting');
+        break;
+      case 'view-recordings':
         router.push('/recordings');
-        break;
-      }
-
-      default:
         break;
     }
   };
@@ -105,23 +128,122 @@ export default function ActionCardList({
             description={card.description}
             icon={card.icon}
             variants={itemVariants}
-            onClick={() => setSelectedCard(card)}
+            onClick={() => handleCardClick(card.id)}
           />
         ))}
       </motion.div>
 
-      {/* Meeting Modal */}
+      {/* ── Instant Meeting Modal ─────────────────────── */}
       <MeetingModal
-        open={!!selectedCard}
+        open={meetingState === 'isInstantMeeting'}
         onOpenChange={(open) => {
-          if (!open) setSelectedCard(null);
+          if (!open) setMeetingState(undefined);
         }}
-        title={selectedCard?.modalTitle ?? ''}
-        description={selectedCard?.modalDescription ?? ''}
-        buttonText={selectedCard?.buttonText ?? ''}
-        icon={selectedCard?.icon ?? actionCards[0].icon}
-        onAction={handleAction}
+        title="Start an Instant Meeting"
+        description="Launch a meeting room instantly and invite participants."
+        buttonText="Start Meeting"
+        icon={actionCards[0].icon}
+        className="text-center"
+        onAction={createMeeting}
       />
+
+      {/* ── Schedule Meeting Modal ────────────────────── */}
+      {!callDetail ? (
+        <MeetingModal
+          open={meetingState === 'isScheduleMeeting'}
+          onOpenChange={(open) => {
+            if (!open) {
+              setMeetingState(undefined);
+              setValues(initialValues);
+            }
+          }}
+          title="Schedule a Meeting"
+          description="Pick a date, time, and add a description for your meeting."
+          buttonText="Schedule Meeting"
+          icon={actionCards[2].icon}
+          onAction={createMeeting}
+        >
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-zinc-300">
+              Add a description
+            </label>
+            <Textarea
+              className="border-white/10 bg-white/5 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 min-h-20 resize-none rounded-xl"
+              placeholder="What is this meeting about?"
+              onChange={(e) =>
+                setValues({ ...values, description: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="flex w-full flex-col gap-2">
+            <label className="text-sm font-medium text-zinc-300">
+              Select Date and Time
+            </label>
+            <ReactDatePicker
+              selected={values.dateTime}
+              onChange={(date) => setValues({ ...values, dateTime: date! })}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="Time"
+              dateFormat="MMMM d, yyyy h:mm aa"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30 transition-colors"
+            />
+          </div>
+        </MeetingModal>
+      ) : (
+        <MeetingModal
+          open={meetingState === 'isScheduleMeeting'}
+          onOpenChange={(open) => {
+            if (!open) {
+              setMeetingState(undefined);
+              setCallDetail(undefined);
+              setValues(initialValues);
+            }
+          }}
+          title="Meeting Created"
+          image="/icons/checked.svg"
+          className="text-center"
+          buttonText="Copy Meeting Link"
+          buttonIcon="/icons/copy.svg"
+          onAction={() => {
+            navigator.clipboard.writeText(meetingLink);
+            toast.success('Link Copied', {
+              description: 'Meeting link has been copied to your clipboard.',
+            });
+          }}
+        />
+      )}
+
+      {/* ── Join Meeting Modal ────────────────────────── */}
+      <MeetingModal
+        open={meetingState === 'isJoiningMeeting'}
+        onOpenChange={(open) => {
+          if (!open) {
+            setMeetingState(undefined);
+            setValues(initialValues);
+          }
+        }}
+        title="Join a Meeting"
+        description="Enter the meeting link or code to join an existing session."
+        buttonText="Join Meeting"
+        icon={actionCards[1].icon}
+        className="text-center"
+        onAction={() => {
+          if (!values.link) {
+            toast.warning('Please enter a meeting link');
+            return;
+          }
+          router.push(values.link);
+        }}
+      >
+        <Input
+          placeholder="Paste meeting link here…"
+          onChange={(e) => setValues({ ...values, link: e.target.value })}
+          className="border-white/10 bg-white/5 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 rounded-xl py-5"
+        />
+      </MeetingModal>
     </>
   );
 }
