@@ -50,50 +50,58 @@ const MeetingRoom = () => {
     };
 
     return (
-        <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
-            <div className="relative flex size-full items-center justify-center">
-                <div className=" flex size-full max-w-250 items-center">
+        <section className="h-screen w-full flex flex-col overflow-hidden text-zinc-100 bg-[#050507]">
+            {/* Top Area: Video Grid */}
+            <div className="flex-1 w-full relative min-h-0 bg-black/40 p-2 sm:p-4 flex">
+                <div className="w-full h-full flex-1">
                     <CallLayout />
                 </div>
+
+                {/* Right Sidebar: Participants List */}
                 <div
-                    className={cn('h-[calc(100vh-86px)] hidden ml-2', {
+                    className={cn('h-full hidden border-l border-white/10 bg-[#0a0a0f] transition-all duration-300', {
                         'show-block': showParticipants,
                     })}
                 >
                     <CallParticipantsList onClose={() => setShowParticipants(false)} />
                 </div>
             </div>
-            {/* video layout and call controls */}
-            <div className="fixed bottom-0 flex w-full items-center justify-center gap-5">
+
+            {/* Bottom Area: Call Controls Panel */}
+            <div className="w-full flex items-center justify-center gap-3 sm:gap-5 p-4 sm:p-6 bg-[#0a0a0f] border-t border-white/10 relative z-10 shrink-0">
                 <CallControls onLeave={() => router.push(`/`)} />
 
                 <DropdownMenu>
-                    <div className="flex items-center">
-                        <DropdownMenuTrigger className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]  ">
-                            <LayoutList size={20} className="text-white" />
-                        </DropdownMenuTrigger>
-                    </div>
-                    <DropdownMenuContent className="border-dark-1 bg-dark-1 text-white">
-                        {['Grid', 'Speaker-Left', 'Speaker-Right'].map((item, index) => (
-                            <div key={index}>
-                                <DropdownMenuItem
-                                    onClick={() =>
-                                        setLayout(item.toLowerCase() as CallLayoutType)
-                                    }
-                                >
-                                    {item}
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator className="border-dark-1" />
-                            </div>
+                    <DropdownMenuTrigger className="flex items-center justify-center w-12 h-12 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors outline-none cursor-pointer">
+                        <LayoutList size={22} className="text-zinc-300" />
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="border border-white/10 bg-[#0e0e14] text-zinc-100 min-w-40 p-2 rounded-xl shadow-2xl mb-2">
+                        {['Grid', 'Speaker-Left', 'Speaker-Right'].map((item) => (
+                            <DropdownMenuItem
+                                key={item}
+                                onClick={() => setLayout(item.toLowerCase() as CallLayoutType)}
+                                className="cursor-pointer focus:bg-white/10 focus:text-white rounded-lg px-3 py-2 text-sm transition-colors"
+                            >
+                                {item}
+                            </DropdownMenuItem>
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
+
                 <CallStatsButton />
-                <button onClick={() => setShowParticipants((prev) => !prev)}>
-                    <div className=" cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]  ">
-                        <Users size={20} className="text-white" />
-                    </div>
+
+                <button
+                    onClick={() => setShowParticipants((prev) => !prev)}
+                    className={cn("flex items-center justify-center w-12 h-12 rounded-2xl border transition-colors outline-none cursor-pointer",
+                        showParticipants
+                            ? "bg-indigo-500/20 border-indigo-500/30 text-indigo-400"
+                            : "bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10"
+                    )}
+                >
+                    <Users size={22} />
                 </button>
+
                 {!isPersonalRoom && <EndCallButton />}
             </div>
         </section>

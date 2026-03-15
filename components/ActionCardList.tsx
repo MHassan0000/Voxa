@@ -12,6 +12,7 @@ import ActionCard from '@/components/ActionCard';
 import MeetingModal from '@/components/MeetingModal';
 import type { ActionCardData } from '@/types';
 import type { Variants } from 'framer-motion';
+import ReactDatepicker from 'react-datepicker';
 
 interface ActionCardListProps {
   containerVariants: Variants;

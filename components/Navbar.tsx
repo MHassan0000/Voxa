@@ -13,7 +13,7 @@ export default function Navbar() {
     >
       {/* Left – Mobile nav + logo on small screens */}
       <div className="flex items-center gap-3">
-        <MobileNav />
+
         <div className="flex lg:hidden items-center gap-3">
           <Image
             src="/images/voxa-logo-new.png"
@@ -47,6 +47,7 @@ export default function Navbar() {
             </button>
           </SignInButton>
         </Show>
+        <MobileNav />
       </div>
     </header>
   );
