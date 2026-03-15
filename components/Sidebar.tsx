@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
@@ -42,13 +41,11 @@ export default function Sidebar({
     >
       {/* Logo */}
       <div className={`flex items-center gap-3 py-7 ${collapsed ? 'justify-center px-3' : 'px-6'}`}>
-        <Image
-          src="/images/voxa-logo-new.png"
-          alt="Voxa"
-          width={40}
-          height={40}
-          className="w-10 h-10 rounded-lg object-contain shrink-0"
-          priority
+        <div
+          className="w-10 h-10 rounded-lg shrink-0 bg-contain bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/images/voxa-logo-new.png')" }}
+          role="img"
+          aria-label="Voxa logo"
         />
         <AnimatePresence>
           {!collapsed && (
@@ -166,12 +163,11 @@ export default function Sidebar({
             transition={{ duration: 0.15 }}
           >
             <div className="flex items-center gap-2">
-              <Image
-                src="/images/voxa-logo-new.png"
-                alt="Voxa"
-                width={20}
-                height={20}
-                className="w-5 h-5 rounded opacity-70 object-contain shrink-0"
+              <div
+                className="w-5 h-5 rounded shrink-0 bg-contain bg-center bg-no-repeat opacity-70"
+                style={{ backgroundImage: "url('/images/voxa-logo-new.png')" }}
+                role="img"
+                aria-label="Voxa logo"
               />
               <p className="text-xs font-medium text-zinc-400">
                 Voxa

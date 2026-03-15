@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import StreamVideoProvider from '@/providers/streamclientprovider';
 
 export default function RootLayout({
@@ -11,6 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const pathname = usePathname();
+  const isMeetingPage = pathname.startsWith('/meeting');
 
   return (
     <StreamVideoProvider>
@@ -33,8 +37,11 @@ export default function RootLayout({
         {/* Main content area — fills remaining space */}
         <div className="flex-1 flex flex-col overflow-hidden min-w-0" style={{ backgroundColor: '#050507' }}>
           <Navbar />
-          <main className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-5 lg:px-8 py-5">
-            {children}
+          <main className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-5 lg:px-8 py-5 flex flex-col">
+            <div className="flex-1">
+              {children}
+            </div>
+            {!isMeetingPage && <Footer />}
           </main>
         </div>
       </div>
